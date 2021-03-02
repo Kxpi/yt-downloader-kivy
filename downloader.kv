@@ -1,0 +1,280 @@
+#:import Factory kivy.factory.Factory
+WindowManager:
+	Choice_screen:
+
+	Single_file_screen:
+
+	Playlist_screen:
+
+	Outcome_screen_single:
+
+	Outcome_screen_playlist:
+
+<Choice_screen>
+	name: "choice_screen"
+
+	BoxLayout:
+		orientation: 'vertical'
+		padding:40
+		spacing:40
+		size: root.width, root.height
+
+		Image:
+			source: "images/yt_logo3.png"
+
+		RoundedButton:
+			id: single_file
+			text: "Single YouTube file"
+			font_size: 26
+			size_hint_x: .6
+			size_hint_y: .4
+			pos_hint: {'center_x':.5}
+			on_release: 
+				app.root.current = "single_file_screen"
+				root.manager.transition.direction = "left"
+
+		RoundedButton:
+			id: playlist
+			text: "YouTube playlist"
+			font_size: 26
+			size_hint_x: .6
+			size_hint_y: .4
+			pos_hint: {'center_x':.5}
+			on_release: 
+				app.root.current = "playlist_screen"
+				root.manager.transition.direction = "left"
+
+
+
+<Single_file_screen>
+	name: "single_file_screen"
+	id: single_file_screen
+	BoxLayout:
+		orientation: 'vertical'
+		padding:10
+		spacing:7
+		size: root.width, root.height
+
+		RoundedButton:
+			id: go_back
+			text: "Go back"
+			font_size:16
+			size_hint_x: .15
+			size_hint_y: .2
+			pos_hint: {'center_x':.1}
+			on_release: 
+				app.root.current = "choice_screen"
+				root.manager.transition.direction = "right"
+
+		Label:
+			text: "Paste the link to video:"
+			font_size: 28
+			size_hint_y: .2
+
+		TextInput:
+			id: video_link
+			multiline: False
+			font_size: 16
+			size_hint_y: .16
+			size_hint_x: .9
+			pos_hint: {'center_x':.5}
+
+		FileChooserListView:
+			id: filechooser 
+        	dirselect: True
+        	size_hint_y: 1.4
+			on_selection: single_file_screen.selected(filechooser.selection)
+		
+		Label:
+			id: selected_directory
+			text: ''
+			font_size: 22
+			size_hint_y: .2
+
+		BoxLayout:
+			orientation: 'horizontal'
+			padding: 15
+			spacing: 30
+			size: root.width, root.height
+			size_hint_y: 0.4
+			RoundedButton:
+				id: sound_only
+				font_size: 22
+				size_hint_y: .8
+				size_hint_x: .8
+				text: "Sound only (MP3 file)"
+				on_release:
+					app.root.current = "outcome_screen_single"
+					root.manager.transition.direction = 'left'
+					root.choosen_link()
+					root.vid_or_not_vid(False)
+					
+
+		
+			RoundedButton:
+				id: with_video
+				font_size: 22
+				size_hint_y: .8
+				size_hint_x: .8
+				text: "Sound and video (MP4 file)"
+				on_release: 
+					app.root.current = "outcome_screen_single"
+					root.manager.transition.direction = 'left'
+					root.choosen_link()
+					root.vid_or_not_vid(True)
+
+		
+
+<Playlist_screen>
+	name: "playlist_screen"
+	id: playlist_screen
+	BoxLayout:
+		orientation: 'vertical'
+		padding:10
+		spacing:7
+		size: root.width, root.height
+
+		RoundedButton:
+			id: go_back
+			text: "Go back"
+			font_size:16
+			size_hint_x: .15
+			size_hint_y: .2
+			pos_hint: {'center_x':.1}
+			on_release: 
+				app.root.current = "choice_screen"
+				root.manager.transition.direction = "right"
+				
+
+		Label:
+			text: "Paste the link to playlist:"
+			font_size: 32
+			size_hint_y: .2
+
+		TextInput:
+			id: playlist_link
+			multiline: False
+			font_size: 16
+			size_hint_y: .16
+			size_hint_x: .9
+			pos_hint: {'center_x':.5}
+
+		FileChooserListView:
+			id: filechooser 
+        	dirselect: True
+        	size_hint_y: 1.4
+			on_selection: playlist_screen.selected(filechooser.selection)
+
+		Label:
+			id: selected_directory
+			text: ''
+			font_size: 22
+			size_hint_y: .2
+
+		BoxLayout:
+			orientation: 'horizontal'
+			padding:15
+			spacing:30
+			size: root.width, root.height
+			size_hint_y: 0.4
+			RoundedButton:
+				id: sound_only
+				font_size: 22
+				text: "Sound only"
+				size_hint_y: .8
+				size_hint_x: .8
+				on_release: 
+					app.root.current = "outcome_screen_playlist"
+					root.manager.transition.direction = 'left'
+					root.choosen_link()
+					root.vid_or_not_vid(False)
+					
+				
+
+			RoundedButton:
+				id: with_video
+				font_size: 22
+				size_hint_y: .8
+				size_hint_x: .8
+				text: "Sound and video"
+				on_release: 
+					app.root.current = "outcome_screen_playlist"
+					root.manager.transition.direction = 'left'
+					root.choosen_link()
+					root.vid_or_not_vid(True)
+
+
+<Outcome_screen_single>
+	name: 'outcome_screen_single'
+	id: outcome_screen_single
+	on_enter: root.download_single()
+	BoxLayout:
+		orientation: 'vertical'
+		padding: 30
+		spacing:20
+		Label:
+			text:''
+			size_hint_y: .6
+
+		Label:
+			id: output
+			font_size: 40
+			text: '...'
+			size_hint: (.8, .6)
+			pos_hint: {'center_x': .5}
+		Label:
+			text:''
+		RoundedButton:
+			id: finish
+			text: "Finish"
+			font_size:26
+			size_hint_x: .4
+			size_hint_y: .25
+			pos_hint: {'center_x':.5}
+			on_release: 
+				app.root.current = "single_file_screen"
+				root.manager.transition.direction = "right"
+				root.clear_output()
+
+<Outcome_screen_playlist>
+	name: 'outcome_screen_playlist'
+	id: outcome_screen_playlist
+	on_enter: root.download_playlist()
+
+	BoxLayout:
+		padding: 30
+		spacing:20
+		orientation: 'vertical'
+
+		TextInput:
+			id: output
+			text: ''
+			readonly: True
+
+
+		RoundedButton:
+			id: finish
+			text: "Finish"
+			font_size:26
+			size_hint_x: .3
+			size_hint_y: .15
+			pos_hint: {'center_x':.5}
+			on_release: 
+				app.root.current = "playlist_screen"
+				root.manager.transition.direction = "right"
+				root.clear_output()
+
+<RoundedButton@Button>
+	background_color: (0, 0, 0, 0)
+	background_normal: ''
+	canvas.before:
+		Color:
+			#rgba: (3/255, 202/255, 252/255, 1)
+			rgba: (242/255, 15/255, 15/255, 1)
+		RoundedRectangle:
+			size: self.size
+			pos: self.pos
+			radius: [10]
+
+
+
