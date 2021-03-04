@@ -45,7 +45,8 @@ class Single_file_screen(Screen):
 	def choosen_link(self):
 		global hyperlink_single #link for single file download
 		hyperlink_single=self.ids.video_link.text
-
+		
+	#unfortunatelly this funcion is neccessary to not mess up screen ids later during the screen changes because kivy has it's quirks
 	def vid_or_not_vid(self, decision):
 		global with_video_s
 		with_video_s=decision
@@ -81,6 +82,7 @@ class Playlist_screen(Screen):
 		global hyperlink_playlist #link for download of a whole playlist
 		hyperlink_playlist=self.ids.playlist_link.text
 
+	#unfortunatelly this funcion is neccessary to not mess up screen ids later during the screen changes because kivy has it's quirks
 	def vid_or_not_vid(self, decision):
 		global with_video_p
 		with_video_p=decision
